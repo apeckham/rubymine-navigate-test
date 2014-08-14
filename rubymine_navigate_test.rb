@@ -17,7 +17,7 @@ existing_file = Dir['**/*'].find do |f|
 end
 
 if existing_file
-  system '/usr/local/bin/mine', existing_file
+  Kernel.system '/usr/local/bin/mine', existing_file
 else
   if file.include?('spec')
     file_path_to_create = file.sub(/_spec/, '').sub(/^spec\//, 'app/')
@@ -26,5 +26,5 @@ else
   end
 
   FileUtils.touch file_path_to_create
-  system '/usr/local/bin/mine', file_path_to_create
+  Kernel.system '/usr/local/bin/mine', file_path_to_create
 end
