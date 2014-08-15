@@ -1,7 +1,8 @@
 require 'rspec'
 require 'fakefs/spec_helpers'
+require_relative './rubymine_navigate_test'
 
-describe 'rubymine_navigate_test' do
+describe 'toggle' do
   include FakeFS::SpecHelpers
 
   def all_files
@@ -13,11 +14,18 @@ describe 'rubymine_navigate_test' do
     expect(all_files).to be_empty
   end
 
-  it 'runs' do
+  it 'opens an existing file' do
     FileUtils.touch 'spec/controller/application_controller_spec.rb'
     stub_const 'ARGV', ['app/controller/application_controller.rb']
     expect(Kernel).to receive(:system).with '/usr/local/bin/mine', '/spec/controller/application_controller_spec.rb'
+    toggle
     expect(all_files).to eq ['/spec/controller/application_controller_spec.rb']
-    load './rubymine_navigate_test.rb'
+  end
+
+  it 'creates and opens a file' do
+    stub_const 'ARGV', ['app/controller/application_controller.rb']
+    expect(Kernel).to receive(:system).with '/usr/local/bin/mine', 'spec/controller/application_controller_spec.rb'
+    toggle
+    expect(all_files).to eq ['/spec/controller/application_controller_spec.rb']
   end
 end

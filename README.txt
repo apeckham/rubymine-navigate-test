@@ -1,0 +1,1 @@
+Based on http://pivotallabs.com/swapping-javascript-spec-implementation-rubymine/
