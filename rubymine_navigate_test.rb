@@ -7,6 +7,7 @@ def toggle(file)
     file_to_open = file.sub(/\.(\w+)$/, '_spec.\1').sub(/^app\//, 'spec/')
   end
 
+  FileUtils.mkdir_p File.dirname(file_to_open)
   FileUtils.touch file_to_open
   Kernel.system '/usr/local/bin/mine', file_to_open
 end
