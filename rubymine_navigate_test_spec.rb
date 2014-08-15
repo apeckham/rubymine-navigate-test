@@ -4,6 +4,7 @@ require_relative './rubymine_navigate_test'
 
 describe 'toggle' do
   include FakeFS::SpecHelpers
+  MINE = '/usr/local/bin/mine'
 
   def all_files
     Dir['**/*'].select { |f| File.file?(f) }
@@ -15,32 +16,28 @@ describe 'toggle' do
   end
 
   it 'opens an existing spec' do
-    FileUtils.touch 'spec/controller/application_controller_spec.rb'
-    stub_const 'ARGV', ['app/controller/application_controller.rb']
-    expect(Kernel).to receive(:system).with '/usr/local/bin/mine', '/spec/controller/application_controller_spec.rb'
-    toggle
-    expect(all_files).to eq ['/spec/controller/application_controller_spec.rb']
+    FileUtils.touch 'spec/controller/my_controller_spec.rb'
+    expect(Kernel).to receive(:system).with MINE, '/spec/controller/my_controller_spec.rb'
+    toggle 'app/controller/my_controller.rb'
+    expect(all_files).to eq ['/spec/controller/my_controller_spec.rb']
   end
 
   it 'creates and opens a spec' do
-    stub_const 'ARGV', ['app/controller/application_controller.rb']
-    expect(Kernel).to receive(:system).with '/usr/local/bin/mine', 'spec/controller/application_controller_spec.rb'
-    toggle
-    expect(all_files).to eq ['/spec/controller/application_controller_spec.rb']
+    expect(Kernel).to receive(:system).with MINE, 'spec/controller/my_controller_spec.rb'
+    toggle 'app/controller/my_controller.rb'
+    expect(all_files).to eq ['/spec/controller/my_controller_spec.rb']
   end
 
   it 'opens an existing impl' do
-    FileUtils.touch 'app/controller/application_controller.rb'
-    stub_const 'ARGV', ['spec/controller/application_controller_spec.rb']
-    expect(Kernel).to receive(:system).with '/usr/local/bin/mine', '/app/controller/application_controller.rb'
-    toggle
-    expect(all_files).to eq ['/app/controller/application_controller.rb']
+    FileUtils.touch 'app/controller/my_controller.rb'
+    expect(Kernel).to receive(:system).with MINE, '/app/controller/my_controller.rb'
+    toggle 'spec/controller/my_controller_spec.rb'
+    expect(all_files).to eq ['/app/controller/my_controller.rb']
   end
 
   it 'creates and opens an impl' do
-    stub_const 'ARGV', ['spec/controller/application_controller_spec.rb']
-    expect(Kernel).to receive(:system).with '/usr/local/bin/mine', 'app/controller/application_controller.rb'
-    toggle
-    expect(all_files).to eq ['/app/controller/application_controller.rb']
+    expect(Kernel).to receive(:system).with MINE, 'app/controller/my_controller.rb'
+    toggle 'spec/controller/my_controller_spec.rb'
+    expect(all_files).to eq ['/app/controller/my_controller.rb']
   end
 end

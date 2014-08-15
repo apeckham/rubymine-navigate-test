@@ -1,7 +1,6 @@
 require 'fileutils'
 
-def toggle
-  file = ARGV[0] || raise
+def toggle(file)
   basename = File.basename(file)
 
   basename_to_open = if file.include?('spec')
@@ -28,4 +27,4 @@ def toggle
   end
 end
 
-toggle if __FILE__ == $0
+toggle(ARGV[0] || raise) if __FILE__ == $0
