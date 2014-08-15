@@ -21,18 +21,12 @@ describe 'toggle' do
       toggle 'app/controller/my_controller.rb'
       expect(all_files).to eq ['/spec/controller/my_controller_spec.rb']
     end
+  end
 
-    it 'opens an existing impl' do
-      FileUtils.touch 'app/controller/my_controller.rb'
-      expect(Kernel).to receive(:system).with MINE, 'app/controller/my_controller.rb'
-      toggle 'spec/controller/my_controller_spec.rb'
-      expect(all_files).to eq ['/app/controller/my_controller.rb']
-    end
-
-    it 'creates and opens an impl' do
-      expect(Kernel).to receive(:system).with MINE, 'app/controller/my_controller.rb'
-      toggle 'spec/controller/my_controller_spec.rb'
-      expect(all_files).to eq ['/app/controller/my_controller.rb']
+  describe 'find_opposite' do
+    it 'finds them' do
+      expect(find_opposite('app/controller/my_controller.rb')).to eq 'spec/controller/my_controller_spec.rb'
+      expect(find_opposite('spec/controller/my_controller_spec.rb')).to eq 'app/controller/my_controller.rb'
     end
   end
 
