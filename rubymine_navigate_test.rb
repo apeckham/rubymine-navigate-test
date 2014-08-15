@@ -1,30 +1,14 @@
 require 'fileutils'
 
 def toggle(file)
-  basename = File.basename(file)
-
-  basename_to_open = if file.include?('spec')
-                       basename.sub /_spec\.(coffee|rb)/, '.\1'
-                     else
-                       basename.sub /\.(\w+)$/, '_spec.\1'
-                     end
-
-  existing_file = Dir['**/*'].find do |f|
-    File.basename(f) == basename_to_open
-  end
-
-  if existing_file
-    Kernel.system '/usr/local/bin/mine', existing_file
+  if file.include?('spec')
+    file_to_open = file.sub(/_spec/, '').sub(/^spec\//, 'app/')
   else
-    if file.include?('spec')
-      file_path_to_create = file.sub(/_spec/, '').sub(/^spec\//, 'app/')
-    else
-      file_path_to_create = file.sub(/\.(\w+)$/, '_spec.\1').sub(/^app\//, 'spec/')
-    end
-
-    FileUtils.touch file_path_to_create
-    Kernel.system '/usr/local/bin/mine', file_path_to_create
+    file_to_open = file.sub(/\.(\w+)$/, '_spec.\1').sub(/^app\//, 'spec/')
   end
+
+  FileUtils.touch file_to_open
+  Kernel.system '/usr/local/bin/mine', file_to_open
 end
 
 toggle(ARGV[0] || raise) if __FILE__ == $0
