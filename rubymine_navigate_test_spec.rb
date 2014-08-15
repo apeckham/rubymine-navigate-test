@@ -36,4 +36,11 @@ describe 'toggle' do
     toggle
     expect(all_files).to eq ['/app/controller/application_controller.rb']
   end
+
+  it 'creates and opens an impl' do
+    stub_const 'ARGV', ['spec/controller/application_controller_spec.rb']
+    expect(Kernel).to receive(:system).with '/usr/local/bin/mine', 'app/controller/application_controller.rb'
+    toggle
+    expect(all_files).to eq ['/app/controller/application_controller.rb']
+  end
 end
